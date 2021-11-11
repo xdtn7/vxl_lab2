@@ -166,7 +166,7 @@ void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim ){
 	if(!switch_counter){
 		switch_counter = switch_time/TIMER_CYCLE;
 		update7SEG (index_led);
-		if(index_led==4) index_led=0;
+		if(index_led==3) index_led=0;
 		else index_led++;
 	}
 
