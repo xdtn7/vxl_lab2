@@ -122,7 +122,7 @@ int switch_counter = switch_time/TIMER_CYCLE;
 
 int timer0_counter = 0;
 int timer0_flag = 0;
-int TIMER_CYCLE = 10;
+
 void setTimer0 ( int duration ) {
 	timer0_counter = duration / TIMER_CYCLE ;
 	timer0_flag = 0;
@@ -136,7 +136,7 @@ void timer_run() {
 
 void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim ){
 	timer_run();
-
+	switch_counter--;
 	if(!switch_counter){
 		switch_counter = switch_time/TIMER_CYCLE;
 		update7SEG (index_led);
@@ -192,6 +192,7 @@ int main(void)
 
   //if in line 1 of the code above is changed to setTimer0(10), what is changed compared to 2 first questions and why?
   //-- timer0_counter = 10/10 = 1 => After 10ms, LED change
+  updateClockBuffer ();
   setTimer0 (1000) ;
 
   while (1)
