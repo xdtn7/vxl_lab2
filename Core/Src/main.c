@@ -110,7 +110,7 @@ void updateClockBuffer(){
 
 int timer0_counter = 0;
 int timer0_flag = 0;
-int TIMER_CYCLE = 500;
+int TIMER_CYCLE = 10;
 void setTimer0 ( int duration ) {
 	timer0_counter = duration / TIMER_CYCLE ;
 	timer0_flag = 0;
@@ -158,32 +158,32 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
-  setTimer0(500);
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  //if in line 1 of the code above is miss, what happens after that and why?
+  //-- timer0_counter = 0 => timer0_flag never = 1 in timer_run() => LED unchange
+
+  //if in line 1 of the code above is changed to setTimer0(1), what happens after that and why?
+  //-- timer0_counter = 1/10 = 0 => LED unchange
+
+  //if in line 1 of the code above is changed to setTimer0(10), what is changed compared to 2 first questions and why?
+  //-- timer0_counter = 10/10 = 1 => After 10ms, LED change
+  setTimer0 (1000) ;
+
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  second++;
-	  		if(second >= 60){
-	  				second = 0;
-	  				minute++;
-	  		}
-	  		if(minute >= 60){
-	  				 minute = 0;
-	  				 hour++;
-	  		}
-	  		if(hour >= 24){
-	  				 hour = 0;
-	  		}
-	  	if(timer0_flag == 1){
-	  		updateClockBuffer () ;
-	  		setTimer0(500);
-	  	  }
+	  if( timer0_flag == 1) {
+	   HAL_GPIO_TogglePin ( LED_RED_GPIO_Port , LED_RED_Pin ) ;
+	   setTimer0 (2000) ;
+	  }
   }
   /* USER CODE END 3 */
 }
