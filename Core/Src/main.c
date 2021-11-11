@@ -131,7 +131,7 @@ const int sec = 1000; //ms
 const int blink = 1000; //ms
 const int switch_time = 1000; //ms
 
-const int TIMER_CYCLE = 10; //ms
+const int TIMER_CYCLE = 1000; //ms
 int timer0_counter = sec/TIMER_CYCLE;
 int blink_counter = blink/TIMER_CYCLE;
 int switch_counter = switch_time/TIMER_CYCLE;
@@ -166,7 +166,7 @@ void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim ){
 	if(!switch_counter){
 		switch_counter = switch_time/TIMER_CYCLE;
 		update7SEG (index_led);
-		if(index_led==4) index_led=0;
+		if(index_led==3) index_led=0;
 		else index_led++;
 	}
 
@@ -277,7 +277,7 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 7999;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 9;
+  htim2.Init.Period = 999;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
