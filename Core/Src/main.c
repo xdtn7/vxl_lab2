@@ -108,22 +108,55 @@ void updateClockBuffer(){
 	led_buffer[3] = minute%10;
 }
 
-int timer0_counter = 0;
-int timer0_flag = 0;
-int TIMER_CYCLE = 10;
-void setTimer0 ( int duration ) {
-	timer0_counter = duration / TIMER_CYCLE ;
-	timer0_flag = 0;
-}
-void timer_run() {
-	if( timer0_counter > 0) {
-		timer0_counter--;
-		if( timer0_counter == 0) timer0_flag = 1;
-	}
+
+//void setTimer0 ( int duration ) {
+//
+//	timer0_flag = 0;
+//}
+//void timer_run() {
+//	if( timer0_counter > 0) {
+//		timer0_counter--;
+//		if( timer0_counter == 0) {
+//			timer0_flag = 1;
+//			timer0_counter = 500 / TIMER_CYCLE ;
+//		}
+//	}
+//}
+
+void blink_dot(){
+	HAL_GPIO_TogglePin ( GPIOA , GPIO_PIN_4);
 }
 
+
+const int blink = 1000; //ms
+const int switch_time = 250; //ms
+
+const int TIMER_CYCLE = 10; //ms
+
+int blink_counter = blink/TIMER_CYCLE;
+int switch_counter = switch_time/TIMER_CYCLE;
+
 void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim ){
-	timer_run();
+//	timer_run();
+
+	blink_counter--;
+	switch_counter--;
+	if(!blink_counter){
+		blink_counter = blink/TIMER_CYCLE;
+		blink_dot();
+	}
+
+
+
+	if(!switch_counter){
+		switch_counter = switch_time/TIMER_CYCLE;
+		update7SEG (index_led);
+		if(index_led==3) index_led=0;
+		else index_led++;
+	}
+
+	 //
+
 }
 /* USER CODE END 0 */
 
@@ -159,32 +192,32 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
 
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
-  //if in line 1 of the code above is miss, what happens after that and why?
-  //-- timer0_counter = 0 => timer0_flag never = 1 in timer_run() => LED unchange
-
-  //if in line 1 of the code above is changed to setTimer0(1), what happens after that and why?
-  //-- timer0_counter = 1/10 = 0 => LED unchange
-
-  //if in line 1 of the code above is changed to setTimer0(10), what is changed compared to 2 first questions and why?
-  //-- timer0_counter = 10/10 = 1 => After 10ms, LED change
-  setTimer0 (1000) ;
-
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  if( timer0_flag == 1) {
-	   HAL_GPIO_TogglePin ( LED_RED_GPIO_Port , LED_RED_Pin ) ;
-	   setTimer0 (2000) ;
-	  }
+	  	  	 second++;
+	  		if(second >= 60){
+	  			second = 0;
+	  			minute++;
+	  		}
+	  		if(minute >= 60){
+	  			minute = 0;
+	  			hour++;
+	  		}
+	  		if(hour >= 24){
+	  			hour = 0;
+	  		}
+	  		updateClockBuffer ();
+	  		HAL_Delay (1000) ;
   }
+  /* USER CODE END 3 */
+}
   /* USER CODE END 3 */
 }
 
