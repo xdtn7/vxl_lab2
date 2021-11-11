@@ -108,6 +108,18 @@ void updateClockBuffer(){
 	led_buffer[3] = minute%10;
 }
 
+void blink_dot(){
+	HAL_GPIO_TogglePin ( GPIOA , GPIO_PIN_4);
+}
+
+const int blink = 1000; //ms
+const int switch_time = 250; //ms
+
+const int TIMER_CYCLE = 10; //ms
+
+int blink_counter = blink/TIMER_CYCLE;
+int switch_counter = switch_time/TIMER_CYCLE;
+
 int timer0_counter = 0;
 int timer0_flag = 0;
 int TIMER_CYCLE = 10;
@@ -124,6 +136,13 @@ void timer_run() {
 
 void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim ){
 	timer_run();
+
+	if(!switch_counter){
+		switch_counter = switch_time/TIMER_CYCLE;
+		update7SEG (index_led);
+		if(index_led==3) index_led=0;
+		else index_led++;
+	}
 }
 /* USER CODE END 0 */
 
@@ -181,8 +200,22 @@ int main(void)
 //
     /* USER CODE BEGIN 3 */
 	  if( timer0_flag == 1) {
-	   HAL_GPIO_TogglePin ( LED_RED_GPIO_Port , LED_RED_Pin ) ;
-	   setTimer0 (2000) ;
+		  blink_dot();
+		  second++;
+		 	  		if(second >= 60){
+		 	  			second = 0;
+		 	  			minute++;
+		 	  		}
+		 	  		if(minute >= 60){
+		 	  			minute = 0;
+		 	  			hour++;
+		 	  		}
+		 	  		if(hour >= 24){
+		 	  			hour = 0;
+		 	  		}
+		 	  		updateClockBuffer ();
+
+	   setTimer0 (1000) ;
 	  }
   }
   /* USER CODE END 3 */
