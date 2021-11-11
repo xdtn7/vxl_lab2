@@ -108,70 +108,22 @@ void updateClockBuffer(){
 	led_buffer[3] = minute%10;
 }
 
-
-//void setTimer0 ( int duration ) {
-//
-//	timer0_flag = 0;
-//}
-//void timer_run() {
-//	if( timer0_counter > 0) {
-//		timer0_counter--;
-//		if( timer0_counter == 0) {
-//			timer0_flag = 1;
-//			timer0_counter = 500 / TIMER_CYCLE ;
-//		}
-//	}
-//}
-
-void blink_dot(){
-	HAL_GPIO_TogglePin ( GPIOA , GPIO_PIN_4);
+int timer0_counter = 0;
+int timer0_flag = 0;
+int TIMER_CYCLE = 500;
+void setTimer0 ( int duration ) {
+	timer0_counter = duration / TIMER_CYCLE ;
+	timer0_flag = 0;
+}
+void timer_run() {
+	if( timer0_counter > 0) {
+		timer0_counter--;
+		if( timer0_counter == 0) timer0_flag = 1;
+	}
 }
 
-const int sec = 1000; //ms
-const int blink = 1000; //ms
-const int switch_time = 1000; //ms
-
-const int TIMER_CYCLE = 1000; //ms
-int timer0_counter = sec/TIMER_CYCLE;
-int blink_counter = blink/TIMER_CYCLE;
-int switch_counter = switch_time/TIMER_CYCLE;
-
 void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim ){
-//	timer_run();
-	timer0_counter--;
-	blink_counter--;
-	switch_counter--;
-	if(!blink_counter){
-		blink_counter = blink/TIMER_CYCLE;
-		blink_dot();
-	}
-
-	if(!timer0_counter){
-		timer0_counter=sec/TIMER_CYCLE;
-		second++;
-		if(second >= 60){
-			second = 0;
-			minute++;
-		}
-		if(minute >= 60){
-			minute = 0;
-			hour++;
-		}
-		if(hour >= 24){
-			hour = 0;
-		}
-		updateClockBuffer ();  //update every sec
-	}
-
-	if(!switch_counter){
-		switch_counter = switch_time/TIMER_CYCLE;
-		update7SEG (index_led);
-		if(index_led==3) index_led=0;
-		else index_led++;
-	}
-
-	 //
-
+	timer_run();
 }
 /* USER CODE END 0 */
 
@@ -206,7 +158,7 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
-  updateClockBuffer ();
+  setTimer0(500);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -216,7 +168,22 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
+	  second++;
+	  		if(second >= 60){
+	  				second = 0;
+	  				minute++;
+	  		}
+	  		if(minute >= 60){
+	  				 minute = 0;
+	  				 hour++;
+	  		}
+	  		if(hour >= 24){
+	  				 hour = 0;
+	  		}
+	  	if(timer0_flag == 1){
+	  		updateClockBuffer () ;
+	  		setTimer0(500);
+	  	  }
   }
   /* USER CODE END 3 */
 }
@@ -277,7 +244,7 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 7999;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 999;
+  htim2.Init.Period = 9;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
