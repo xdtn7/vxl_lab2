@@ -129,7 +129,7 @@ void blink_dot(){
 
 const int sec = 1000; //ms
 const int blink = 1000; //ms
-const int switch_time = 500; //ms
+const int switch_time = 1000; //ms
 
 const int TIMER_CYCLE = 10; //ms
 int timer0_counter = sec/TIMER_CYCLE;
