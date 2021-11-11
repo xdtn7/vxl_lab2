@@ -127,18 +127,18 @@ void blink_dot(){
 	HAL_GPIO_TogglePin ( GPIOA , GPIO_PIN_4);
 }
 
-const int sec = 1000; //ms
+
 const int blink = 1000; //ms
 const int switch_time = 250; //ms
 
 const int TIMER_CYCLE = 10; //ms
-int timer0_counter = sec/TIMER_CYCLE;
+
 int blink_counter = blink/TIMER_CYCLE;
 int switch_counter = switch_time/TIMER_CYCLE;
 
 void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim ){
 //	timer_run();
-	timer0_counter--;
+
 	blink_counter--;
 	switch_counter--;
 	if(!blink_counter){
@@ -146,22 +146,7 @@ void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim ){
 		blink_dot();
 	}
 
-//	if(!timer0_counter){
-//		timer0_counter=sec/TIMER_CYCLE;
-//		second++;
-//		if(second >= 60){
-//			second = 0;
-//			minute++;
-//		}
-//		if(minute >= 60){
-//			minute = 0;
-//			hour++;
-//		}
-//		if(hour >= 24){
-//			hour = 0;
-//		}
-//		updateClockBuffer ();  //update every sec
-//	}
+
 
 	if(!switch_counter){
 		switch_counter = switch_time/TIMER_CYCLE;
