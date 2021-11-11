@@ -56,34 +56,75 @@ static void MX_GPIO_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-int cnt = 50;
-
-int n = 1;
-void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim )
-{
-
-	if( cnt <= 0) {
-		if(n==1) {
-			n = 0;
-			HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_6, RESET );
-			HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_7, SET );
-		}
-		else {
-			n = 1;
-			HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_6, SET );
-			HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_7, RESET );
-		}
+int counter = 0;
+int sw = 0;
+const int MAX_LED = 4;
+int index_led = 0;
+int led_buffer [4] = {1 , 2 , 3 , 4};
+int hour = 15 , minute = 8 , second = 50;
 
 
-		display7SEG (n);
-		cnt = 50;
+
+void update7SEG ( int index ) {
+	switch ( index ) {
+	case 0:
+		HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_7, SET ) ;
+		HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_8, SET ) ;
+		HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_9, SET ) ;
+		display7SEG (led_buffer[index]);
+		HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_6, RESET ) ;
+		break;
+	case 1:
+		HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_6, SET ) ;
+		HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_8, SET ) ;
+		HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_9, SET ) ;
+		display7SEG (led_buffer[index]);
+		HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_7, RESET ) ;
+		break;
+	case 2:
+		HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_6, SET ) ;
+		HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_7, SET ) ;
+		HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_9, SET ) ;
+		display7SEG (led_buffer[index]);
+		HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_8, RESET ) ;
+		break;
+	case 3:
+		HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_6, SET ) ;
+		HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_7, SET ) ;
+		HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_8, SET ) ;
+		display7SEG (led_buffer[index]);
+		HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_9, RESET ) ;
+		break;
+	default:
+		break;
 	}
 }
-//void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim ){
-////	timer_run();
-////	HAL_GPIO_TogglePin ( GPIOA , GPIO_PIN_5);
-//	HAL_GPIO_WritePin ( GPIOA , GPIO_PIN_5, SET );
-//}
+
+
+void updateClockBuffer(){
+	led_buffer[0] = hour/10;
+	led_buffer[1] = hour%10;
+	led_buffer[2] = minute/10;
+	led_buffer[3] = minute%10;
+}
+
+int timer0_counter = 0;
+int timer0_flag = 0;
+int TIMER_CYCLE = 500;
+void setTimer0 ( int duration ) {
+	timer0_counter = duration / TIMER_CYCLE ;
+	timer0_flag = 0;
+}
+void timer_run() {
+	if( timer0_counter > 0) {
+		timer0_counter--;
+		if( timer0_counter == 0) timer0_flag = 1;
+	}
+}
+
+void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim ){
+	timer_run();
+}
 /* USER CODE END 0 */
 
 /**
@@ -116,9 +157,8 @@ int main(void)
   MX_TIM2_Init();
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
-  HAL_TIM_Base_Start_IT (& htim2 ) ;
-  //setTimer0(500);
+  HAL_TIM_Base_Start_IT(&htim2);
+  setTimer0(500);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -128,22 +168,22 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-//	  second++;
-//	  		if(second >= 60){
-//	  				second = 0;
-//	  				minute++;
-//	  		}
-//	  		if(minute >= 60){
-//	  				 minute = 0;
-//	  				 hour++;
-//	  		}
-//	  		if(hour >= 24){
-//	  				 hour = 0;
-//	  		}
-//	  	if(timer0_flag == 1){
-//	  		updateClockBuffer () ;
-//	  		setTimer0(500);
-//	  	  }
+	  second++;
+	  		if(second >= 60){
+	  				second = 0;
+	  				minute++;
+	  		}
+	  		if(minute >= 60){
+	  				 minute = 0;
+	  				 hour++;
+	  		}
+	  		if(hour >= 24){
+	  				 hour = 0;
+	  		}
+	  	if(timer0_flag == 1){
+	  		updateClockBuffer () ;
+	  		setTimer0(500);
+	  	  }
   }
   /* USER CODE END 3 */
 }
