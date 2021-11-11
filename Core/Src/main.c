@@ -61,7 +61,7 @@ int cnt = 50;
 int n = 1;
 void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim )
 {
-	cnt--;
+
 	if( cnt <= 0) {
 		if(n==1) {
 			n = 0;
