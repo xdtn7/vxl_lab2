@@ -117,12 +117,15 @@ const int switch_time = 250; //ms
 
 const int TIMER_CYCLE = 10; //ms
 
-int blink_counter = blink/TIMER_CYCLE;
-int switch_counter = switch_time/TIMER_CYCLE;
-
+int switch_counter = 0;
 int timer0_counter = 0;
 int timer0_flag = 0;
+int switch_flag = 0;
 
+void setSwitch0 ( int duration ) {
+	switch_counter = duration / TIMER_CYCLE ;
+	switch_flag = 0;
+}
 void setTimer0 ( int duration ) {
 	timer0_counter = duration / TIMER_CYCLE ;
 	timer0_flag = 0;
@@ -132,17 +135,23 @@ void timer_run() {
 		timer0_counter--;
 		if( timer0_counter == 0) timer0_flag = 1;
 	}
+	if( switch_counter > 0) {
+		switch_counter--;
+			if( switch_counter == 0) switch_flag = 1;
+	}
 }
+
+
 
 void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim ){
 	timer_run();
-	switch_counter--;
-	if(!switch_counter){
-		switch_counter = switch_time/TIMER_CYCLE;
-		update7SEG (index_led);
-		if(index_led==3) index_led=0;
-		else index_led++;
-	}
+	//switch_counter--;
+//	if(!switch_counter){
+//		switch_counter = switch_time/TIMER_CYCLE;
+//		update7SEG (index_led);
+//		if(index_led==3) index_led=0;
+//		else index_led++;
+//	}
 }
 /* USER CODE END 0 */
 
@@ -194,12 +203,19 @@ int main(void)
   //-- timer0_counter = 10/10 = 1 => After 10ms, LED change
   updateClockBuffer ();
   setTimer0 (1000) ;
-
+  setSwitch0 (250);
   while (1)
   {
     /* USER CODE END WHILE */
 //
     /* USER CODE BEGIN 3 */
+	  if(switch_flag == 1){
+
+	  		update7SEG (index_led);
+	  		if(index_led==3) index_led=0;
+	  		else index_led++;
+	  		setSwitch0 (250);
+	  	}
 	  if( timer0_flag == 1) {
 		  blink_dot();
 		  second++;
