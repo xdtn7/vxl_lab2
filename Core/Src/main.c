@@ -123,6 +123,7 @@ void updateLEDMatrix (int index ) {
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_14, SET ) ;
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_15, SET ) ;
 			displayMatrix(data[index]);
+			data[index]=displayChange(data[index]);
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_8, RESET ) ;
 			break;
 		case 1:
@@ -135,6 +136,7 @@ void updateLEDMatrix (int index ) {
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_14, SET ) ;
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_15, SET ) ;
 			displayMatrix(data[index]);
+			data[index]=displayChange(data[index]);
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_9, RESET ) ;
 			break;
 		case 2:
@@ -147,6 +149,7 @@ void updateLEDMatrix (int index ) {
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_14, SET ) ;
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_15, SET ) ;
 			displayMatrix(data[index]);
+			data[index]=displayChange(data[index]);
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_10, RESET ) ;
 			break;
 		case 3:
@@ -159,6 +162,7 @@ void updateLEDMatrix (int index ) {
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_14, SET ) ;
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_15, SET ) ;
 			displayMatrix(data[index]);
+			data[index]=displayChange(data[index]);
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_11, RESET ) ;
 			break;
 		case 4:
@@ -171,6 +175,7 @@ void updateLEDMatrix (int index ) {
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_14, SET ) ;
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_15, SET ) ;
 			displayMatrix(data[index]);
+			data[index]=displayChange(data[index]);
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_12, RESET ) ;
 			break;
 		case 5:
@@ -183,6 +188,7 @@ void updateLEDMatrix (int index ) {
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_14, SET ) ;
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_15, SET ) ;
 			displayMatrix(data[index]);
+			data[index]=displayChange(data[index]);
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_13, RESET ) ;
 			break;
 		case 6:
@@ -195,6 +201,7 @@ void updateLEDMatrix (int index ) {
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_14, SET ) ;
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_15, SET ) ;
 			displayMatrix(data[index]);
+			data[index]=displayChange(data[index]);
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_14, RESET ) ;
 			break;
 		case 7:
@@ -207,6 +214,7 @@ void updateLEDMatrix (int index ) {
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_14, SET ) ;
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_15, SET ) ;
 			displayMatrix(data[index]);
+			data[index]=displayChange(data[index]);
 			HAL_GPIO_WritePin ( GPIOB , GPIO_PIN_15, RESET ) ;
 			break;
 

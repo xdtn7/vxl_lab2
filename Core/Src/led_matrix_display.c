@@ -66,3 +66,8 @@ void displayMatrix (uint8_t num){
 			HAL_GPIO_WritePin(LED_MATRIX_1_H_PORT, LED_MATRIX_1_H, RESET);
 		}
   }
+
+uint8_t displayChange(uint8_t data){
+//	return ~data;
+	return ~(((~data)<<1) | (((~data)>>7)&1));
+}
